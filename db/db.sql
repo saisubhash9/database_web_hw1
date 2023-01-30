@@ -6,6 +6,7 @@ create table domain (
 insert into domain values ('Colleges','collegeFactTable');
 insert into domain values ('Automobiles','autoFactTable');
 
+
 create table regularColumn (
   domainName varchar(32),
   columnName varchar(32),
@@ -57,7 +58,7 @@ insert into userBookmark values ('raj','Colleges','fav3','publicOrPrivate=2,regi
 insert into userBookmark values ('raj','Colleges','fav4','publicOrPrivate=2,region=2,state=1,state=3');
 insert into userBookmark values ('raj','Colleges','favorite5','publicOrPrivate=2,region=2,state=1,state=3');
 
-use mydb;
+
 select * from domain;
 
 delete from propertyDetail where domainName = 'Colleges';

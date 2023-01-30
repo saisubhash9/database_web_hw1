@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link ref="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}" >
+        <script src="jquery-3.4.1.min.js"></script>
+        <script src="query.js"></script>
+    </head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    .container {
+        display: flex;
+        align-items: center;
+        background-color: #f2f2f2;
+        border-bottom: 2px solid rgb(0, 0, 0);
+      }
+      .searchmenu
+      {
+        margin-top: 20px;
+        display: flex;
+  flex-direction: column;
+  float: left;
+      }
+      body {
+  font-family: 'Gill Sans', sans-serif;
+}
+label{
+    color:#003399;
+    font-weight: bold;
+}
+h1 {
+  margin-right: auto;
+  color:#003399;
+  font-size: 17px;
+}
+h2{margin-top: 10px;
+    color:#003399;
+  font-size: 17px;  
+}
+      input[type=text] {
+        padding: 10px 15px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border-radius: 4px;
+        background-color: #f2f2f2;
+        font-size: 14px;
+      }
+      .hidden
+      {
+        display: none;
+      }
+      </style>
+    <body>
+        
+        <div class="container">
+            <h1>MULTIDIMENSIONAL DATABASE SEARCH</h1>
+            <form>
+              <label for="userid">User ID:</label>
+              <input type="text" id="userid" name="userid">
+            </form> 
+        </div>
+          
+        <div id="page">
+            <div id="main-col">
+            <table>
+            <tr><td>
+                    <div id="domain_select"> </div>    
+            </td></tr>
+            <h3>Domain Select:</h3>
+            <tr><td>
+                <div id="property_details">
+                </div>
+            </td></tr>
+                <tr><td>
+                    <button type="button" onclick="getvalues()">
+                        Submit
+                    </button>
+                    <input type="reset" value="Reset">
+                </td></tr>
+        
+        <tr><td><div id = "result"></div></td></tr>
+    </body>
+</html>
