@@ -56,6 +56,7 @@ h2{margin-top: 10px;
         .record.active {
           display: block;
         }
+        
         .button {
   display: inline-block;
   vertical-align: top;
@@ -65,6 +66,30 @@ h2{margin-top: 10px;
   margin: 0 4px;
   text-align: center;
 }
+#search {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#search td, #search th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#search tr:nth-child(even){background-color: #f2f2f2;}
+
+#search tr:hover {background-color: #ddd;}
+
+#search th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #003399;
+  color: white;
+}
+
+
       </style>
     <body>
         
@@ -85,9 +110,12 @@ h2{margin-top: 10px;
             </td></tr>
             <h3>Domain Select:</h3>
             <tr><td>
+              <form id = "myForm" action = "#"  >  
+
                 <div id="property_details">
                 
                 </div>
+              </form>
             </td></tr>
                 <tr><td>
                     <button class ="button" type="button" onclick="getvalues()">
@@ -96,13 +124,18 @@ h2{margin-top: 10px;
                     <button class ="button" id="previous">Previous</button>
                 <div class ="button" id="page-number">1</div>
                 <button class ="button" id="next">Next</button>
-                    <input  class ="button" type="reset" value="Reset">
+                    <input  class ="button" type="reset" value="Reset" onClick = "fun()">
                 </td></tr>
-        
+             
         <tr><td>
         
           <div id = "result"></div></td></tr>
     </body>
   
-  
+  <script>
+     function fun(){  
+   document.getElementById("myForm").reset();  
+ }   
+
+  </script>
 </html>

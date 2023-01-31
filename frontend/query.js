@@ -138,7 +138,7 @@ function getvalues  () {
     type: 'GET',
     success: function(response) {
       var dmns = response.data.output;
-      var htmlCod = "<table>";
+      var htmlCod = "<table id=search> <tr> <th>Name</th>  <th>Url</th>    </tr>";
       console.log(dmns[0].url)
       var a=dmns[1].id;
       //console.log(dmns[0].name)
