@@ -27,9 +27,17 @@ function populateDomain() {
     type: 'GET',
     success: function(response) {
       var props = response.data.properties;
-      var htmlCode = "<table>";
+      var htmlCode = " <div class='record'> <table>";
       var iter=1; 
       for (var i=0; i<props.length; i++){
+        if( i>0)
+        {
+          if(i%4==0)
+          {
+            htmlCode+="</table> </div>"
+            htmlCode+="<div class='record'> <table>"
+          }
+        }
         htmlCode += "<tr><td><b>"+iter+"</b>."+props[i].propertyquestion+"</td></tr>";
         iter = iter + 1;
         if (props[i].propertydisplaytype == "select"){
@@ -53,6 +61,9 @@ function populateDomain() {
         }
       }
       }  
+      
+      htmlCode+="  <script> const records = document.querySelectorAll('.record'); console.log(records); const previousButton = document.querySelector('#previous');const nextButton = document.querySelector('#next');const pageNumber = document.querySelector('#page-number'); let currentPage = 0;records[currentPage].classList.add('active');previousButton.addEventListener('click', () => {    records[currentPage].classList.remove('active');   currentPage = Math.max(0, currentPage - 1);   records[currentPage].classList.add('active');   pageNumber.innerHTML = currentPage + 1;  });  nextButton.addEventListener('click', () => {   records[currentPage].classList.remove('active');   currentPage = Math.min(records.length - 1, currentPage + 1);    records[currentPage].classList.add('active');    pageNumber.innerHTML = currentPage + 1;  });  </script>"
+      console.log(htmlCode)
       $("#property_details").html(htmlCode);
     },
     error: function(error) {

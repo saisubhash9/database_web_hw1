@@ -49,6 +49,13 @@ h2{margin-top: 10px;
       {
         display: none;
       }
+      .record {
+          display: none;
+        }
+        
+        .record.active {
+          display: block;
+        }
       </style>
     <body>
         
@@ -69,15 +76,21 @@ h2{margin-top: 10px;
             <h3>Domain Select:</h3>
             <tr><td>
                 <div id="property_details">
+                
                 </div>
             </td></tr>
                 <tr><td>
                     <button type="button" onclick="getvalues()">
                         Submit
                     </button>
+                    <button id="previous">Previous</button>
+                <div id="page-number">1</div>
+                <button id="next">Next</button>
                     <input type="reset" value="Reset">
                 </td></tr>
         
         <tr><td><div id = "result"></div></td></tr>
     </body>
+  
+  
 </html>
