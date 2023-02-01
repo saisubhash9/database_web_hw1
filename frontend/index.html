@@ -66,6 +66,7 @@ h2{margin-top: 10px;
   margin: 0 4px;
   text-align: center;
 }
+
 #search {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -88,30 +89,31 @@ h2{margin-top: 10px;
   background-color: #003399;
   color: white;
 }
-
-
       </style>
     <body>
         
         <div class="container">
             <h1>MULTIDIMENSIONAL DATABASE SEARCH</h1>
-            
+            <form id="books">
               <label for="userid">User ID:</label>
               <input type="text" id="userid" name="userid">
-            
+              <button type="button" onclick="bookmarks()">
+                Submit
+            </button>
+            </form> 
         </div>
           
         <div id="page">
+          <div id="bookmarksbar"></div>
             <div id="main-col">
-              
             <table>
             <tr><td>
-                    <div id="domain_select"> </div>    
+                    <div id="domain_select"> </div>   
+                    
             </td></tr>
             <h3>Domain Select:</h3>
             <tr><td>
-              <form id = "myForm" action = "#"  >  
-
+              <form id = "myForm" action = "#"  > 
                 <div id="property_details">
                 
                 </div>
@@ -124,18 +126,17 @@ h2{margin-top: 10px;
                     <button class ="button" id="previous">Previous</button>
                 <div class ="button" id="page-number">1</div>
                 <button class ="button" id="next">Next</button>
-                    <input  class ="button" type="reset" value="Reset" onClick = "fun()">
+                    <input class ="button" type="reset" value="Reset" onclick="fun()">
+                    
                 </td></tr>
-             
-        <tr><td>
+                <tr><td>bookmark name:<input type="text">
+                  <input id="bookmarkbtn" type="button" value="add bookmark" onclick="addbookmark()"></td></tr>
         
-          <div id = "result"></div></td></tr>
+        <tr><td><div id = "result"></div></td></tr>
     </body>
-  
-  <script>
-     function fun(){  
-   document.getElementById("myForm").reset();  
- }   
-
+    <script>
+      function fun(){  
+    document.getElementById("myForm").reset();  
+  }
   </script>
 </html>
