@@ -23,15 +23,61 @@ class Output(graphene.ObjectType):
     name=graphene.String()
     url=graphene.String()
 
+class User(graphene.ObjectType):
+    userid=graphene.String()
+    domname=graphene.String()
+    bname=graphene.String()
+    bookmark=graphene.String()
+
 class Queries(graphene.ObjectType):
     domains=graphene.List(Domain)
     properties=graphene.List(Property,domain=graphene.String())
     output=graphene.List(Output,domainname=graphene.String(),str=graphene.String())
+    user=graphene.List(User, user=graphene.String())
     
+
+    def resolve_user(self,info,user):
+        db = mysql.connect(
+            host="localhost",
+            database="mydb",
+            user="root",
+            passwd="password",
+            auth_plugin='mysql_native_password'
+        )
+        query1="select * from userbookmark where userid='"+user+"'" 
+        cursor = db.cursor()
+        cursor.execute(query1)
+        records = cursor.fetchall()
+        print(records)
+        cursor.close()
+        db.close()
+        users = []
+        str="(  "
+        for record in records:
+            #print(record[3])
+            temp=record[3].replace(',','=')
+            li=temp.split('=')
+            str="( "
+            str+=li[0]
+            str+=" = "
+            str+=li[1]
+            
+            for ind in range(2,len(li),2):
+                if(li[ind]==li[ind-2]):
+                    str=str+" or "+li[ind]+" = "+li[ind+1]
+                else:
+                    str=str+" ) and ( "+li[ind]+" = "+li[ind+1]
+            str+=" )"    
+            
+            users.append(User(userid=record[0],domname=record[1],bname=record[2],bookmark=str))
+        #print(users)
+        return users
+        
+
     
     def resolve_output(self, info, domainname, str):
         db = mysql.connect(
-            host="localhost",
+            host ="localhost",
             database="mydb",
             user="root",
             passwd="password",
@@ -48,7 +94,10 @@ class Queries(graphene.ObjectType):
         cursor.execute(query2)
         records1 = cursor.fetchall()
         print(records1[1][0])
-
+        if (records):
+            print(records)
+        else: 
+            print("000")
 
         query = "select "+ records1[0][0]+","+records1[1][0]+" from "+records[0][0]+" where "+str
         print(query)
@@ -91,6 +140,7 @@ class Queries(graphene.ObjectType):
         for record in records:
             domains.append(Domain(dname=record[0],ftname=record[1]))
         return domains
+
     def resolve_properties(self,info,domain):
         db = mysql.connect(
             host="localhost",
@@ -122,6 +172,9 @@ class Queries(graphene.ObjectType):
 
         db.close()
         return properties
+
+
+        
 
     
 
