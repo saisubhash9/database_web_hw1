@@ -26,8 +26,21 @@ function populateDomain() {
     url: url,
     type: 'GET',
     success: function(response) {
+      var divsToRemove = document.querySelectorAll(".temp");
+      console.log(divsToRemove.length);
+      if (divsToRemove.length==0){
+        console.log(divsToRemove)
+
+      }
+      else{
+        flag=0;
+    for (var i = 0; i < divsToRemove.len; i++) {
+    divsToRemove[i].remove(); 
+     }
+    console.log(flag)
+}
       var props = response.data.properties;
-      var htmlCode = " <div class='record'> <table>";
+      var htmlCode = "<div class='temp'> <div class='record'> <table>";
       var iter=1; 
       for (var i=0; i<props.length; i++){
         if( i>0)
@@ -61,8 +74,9 @@ function populateDomain() {
         }
       }
       }  
-      
-      htmlCode+="  <script> const records = document.querySelectorAll('.record'); console.log(records); const previousButton = document.querySelector('#previous');const nextButton = document.querySelector('#next');const pageNumber = document.querySelector('#page-number'); let currentPage = 0;records[currentPage].classList.add('active');previousButton.addEventListener('click', () => {    records[currentPage].classList.remove('active');   currentPage = Math.max(0, currentPage - 1);   records[currentPage].classList.add('active');   pageNumber.innerHTML = currentPage + 1;  });  nextButton.addEventListener('click', () => {   records[currentPage].classList.remove('active');   currentPage = Math.min(records.length - 1, currentPage + 1);    records[currentPage].classList.add('active');    pageNumber.innerHTML = currentPage + 1;  });  </script>"
+    
+      htmlCode+="  <script>if (typeof records==='undefined'){ const records = document.querySelectorAll('.record'); console.log(records); const previousButton = document.querySelector('#previous');const nextButton = document.querySelector('#next');const pageNumber = document.querySelector('#page-number'); let currentPage = 0;records[currentPage].classList.add('active');previousButton.addEventListener('click', () => {    records[currentPage].classList.remove('active');   currentPage = Math.max(0, currentPage - 1);   records[currentPage].classList.add('active');   pageNumber.innerHTML = currentPage + 1;  });  nextButton.addEventListener('click', () => {   records[currentPage].classList.remove('active');   currentPage = Math.min(records.length - 1, currentPage + 1);    records[currentPage].classList.add('active');    pageNumber.innerHTML = currentPage + 1;  }); }else{console.log('hello')} </script>"
+      htmlCode+="</div>"
       console.log(htmlCode)
       $("#property_details").html(htmlCode);
     },
@@ -156,3 +170,82 @@ function getvalues  () {
 
 
 
+
+function bookmarks(){
+  var url = 'http://localhost:5000/domains/?query={user(user:"' +$("#userid").val() + '"){userid domname bname bookmark}}';
+  $.ajax({
+    url: url,
+    type: 'GET',
+    success: function(response) {
+      var use = response.data.user;
+      
+      if (use.length == 0){
+        alert("invalid user")
+      }
+      else{
+      var x = document.getElementById("userid");
+      x.style.display = "block";
+      var htmlCode="<h1>hello, "+use[0].userid+"</h1>";
+      }
+      $("#books").html(htmlCode);
+      var htmlCode2="<table align='right'>";
+      
+      for (var i=0; i<use.length; i++){
+        console.log(use[i].bookmark)
+        var temp=use[i].bname;
+        var temp2=use[i].domname;
+        temp=String(temp)
+        temp2=String(temp2)
+        temp3=temp.concat('@',temp2)
+        // console.log(temp3)
+         htmlCode2 += "<tr><td><button value='"+use[i].bookmark+"' id='"+use[i].bname+"' type='button' onclick=bookmarksearch('"+temp3+"')>"+use[i].bname+"</button></td></tr>";
+      }
+      $("#bookmarksbar").html(htmlCode2);
+      if (use.length>=5){
+        console.log("helllo")
+        document.getElementById("bookmarkbtn").disabled=true;
+      }
+    },
+    error: function(error) {
+      alert("invalid user");
+      console.log(error);
+    }
+  });
+
+}
+
+
+function bookmarksearch(a){
+  console.log(a)
+  const myArray = a.split("@");
+  var temp=document.getElementById(myArray[0]).value;
+  console.log(temp)
+  var temp2= myArray[1]
+  var ur = 'http://localhost:5000/domains/?query={output(domainname:"' +temp2+ '",str:"'+temp+'"){url name id heading}}';
+  console.log(ur)
+   $.ajax({
+url: ur,
+type: 'GET',
+success: function(response) {
+  var dmns = response.data.output;
+  var htmlCod = "<table id=search> <tr> <th>Name</th>  <th>Url</th>    </tr>";
+  console.log(dmns[0].url)
+  // var a=dmns[1].id;
+  //console.log(dmns[0].name)
+   for (var i=0; i<dmns.length; i++)
+     htmlCod += "<tr><td>"+dmns[i].name+"</td><td>"+dmns[i].url+"</td></tr>";
+     htmlCod += "</table>";
+  $("#result").html(htmlCod);
+},
+error: function(error) {
+  alert("ERROR with ready");
+  console.log(error);
+}
+});
+}
+
+
+function addbookmark(){
+  
+
+}
