@@ -21,7 +21,9 @@ $(document).ready(function() {
 
 
 function populateDomain() {
-  var url = 'http://localhost:5000/domains/?query={properties(domain:"' +$("#dname").val() + '"){propertyname propertyquestion propertydisplaytype propertoptions{allowedvalue allowedvalueCode}}}';
+  var dname=$("#dname").val()
+  
+  var url = 'http://localhost:5000/domains/?query={properties(domain:"' +dname + '"){propertyname propertyquestion propertydisplaytype propertoptions{allowedvalue allowedvalueCode}}}';
   $.ajax({
     url: url,
     type: 'GET',
@@ -169,10 +171,18 @@ function getvalues  () {
 }
 
 
-
+var g="hello";
 
 function bookmarks(){
-  var url = 'http://localhost:5000/domains/?query={user(user:"' +$("#userid").val() + '"){userid domname bname bookmark}}';
+  var uid=$("#userid").val()
+  if(typeof uid==='undefined')
+  {
+uid=g
+  }
+  else{
+console.log(uid)
+  }
+  var url = 'http://localhost:5000/domains/?query={user(user:"' +uid + '"){userid domname bname bookmark}}';
   $.ajax({
     url: url,
     type: 'GET',
@@ -183,9 +193,13 @@ function bookmarks(){
         alert("invalid user")
       }
       else{
+        if(typeof uid==='undefined')
+        {
       var x = document.getElementById("userid");
       x.style.display = "block";
+        }
       var htmlCode="<h1>hello, "+use[0].userid+"</h1>";
+      g=use[0].userid;
       }
       $("#books").html(htmlCode);
       var htmlCode2="<table align='right'>";
@@ -198,8 +212,8 @@ function bookmarks(){
         temp2=String(temp2)
         temp3=temp.concat('@',temp2)
         // console.log(temp3)
-         htmlCode2 += "<tr><td><button value='"+use[i].bookmark+"' id='"+use[i].bname+"' type='button' onclick=bookmarksearch('"+temp3+"')>"+use[i].bname+"</button></td></tr>";
-      }
+         htmlCode2 += "<tr><td><button value='"+use[i].bookmark+"' id='"+use[i].bname+"' type='button' onclick=bookmarksearch('"+temp3+"')>"+use[i].bname+"</button><div class='w3-xlarge'><a href='javascript:void(0);' onclick=deletebookmark('"+use[i].bname+"')><i  class='fa fa-trash'></i> </div></a></td></tr>";
+        }
       $("#bookmarksbar").html(htmlCode2);
       if (use.length>=5){
         console.log("helllo")
@@ -212,6 +226,29 @@ function bookmarks(){
     }
   });
 
+}
+
+function deletebookmark(bookmarkname)
+{
+  console.log("Hello")
+  console.log(bookmarkname)
+  console.log(g)
+
+  var ur = 'http://localhost:5000/domains/?query=mutation{deleteBookmark(userid:"' +g+ '",bookmarkname:"'+bookmarkname+'"){ok userid bookmarkname}}';
+  $.ajax({
+    url: ur,
+    type: 'POST',
+    success: function(response) {
+      
+        console.log("deleted")
+      bookmarks()
+    },
+    error: function(error) {
+      alert("ERROR with delete");
+      console.log(error);
+    }
+    });
+console.log(ur)
 }
 
 
@@ -246,6 +283,80 @@ error: function(error) {
 
 
 function addbookmark(){
-  
+  var name=document.getElementById("bookmm").value;
+  var user=g;
+  var domname=document.getElementById('dname').value;
+
+  document.getElementById("result").innerHTML = "";
+  var ele = document.getElementsByTagName('input');
+        
+  var select = document.getElementsByTagName("select");
+  console.log(select.length)
+     
+  const li_names=new Array();
+        const li_values=new Array();
+        let i=0;
+  for(i = 0; i < ele.length; i++) {
+
+      if(ele[i].checked)
+        {
+                        li_names.push(ele[i].name);
+                        li_values.push(ele[i].value);
+                    }
+  }
+  var select = document.getElementsByTagName("select");
+  for(i=0;i<select.length;i++)
+  {
+    var temp1=document.getElementsByTagName("select")[i];
+    if (temp1.checked){
+    var name=temp1.name;
+    var selectValue = temp1.options[temp1.selectedIndex].value;
+    if(selectValue=="None")
+    {
+    continue;
+    }
+    else
+    {
+    li_values.push(selectValue)
+    li_names.push(name)
+    }
+  }
+  }
+  let bookmarks_str=""
+  for(i=0;i<li_names.length;i++)
+  {
+    if(i>0){
+      if( i<li_names.length)
+      {
+        bookmarks_str=bookmarks_str.concat(",")
+      }
+    }
+    bookmarks_str=bookmarks_str.concat(li_names[i],"=",li_values[i])
+    
+  }
+  console.log(li_names)
+  console.log(li_values)
+  console.log(bookmarks_str)
+  var ur = 'http://localhost:5000/domains/?query=mutation{createBookmark(bname:"' +name+ '",userid:"'+g+'",dname:"'+domname+'",bookmark:"'+bookmarks_str+'"){ok userid dname bname bookmark}}';
+console.log(ur)
+  $.ajax({
+    url: ur,
+    type: 'POST',
+    success: function(response) {
+      
+        console.log()
+      var dmns = response.data.create_bookmark;
+      var htmlCod = "<table> <tr>bookmark created</tr>";
+      $("#result").html(htmlCod);
+      bookmarks()
+      document.getElementById('bookmm').value = ''
+    },
+    error: function(error) {
+      alert("ERROR with add");
+      console.log(error);
+    }
+    });
 
 }
+
+
