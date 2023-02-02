@@ -29,6 +29,45 @@ class User(graphene.ObjectType):
     bname=graphene.String()
     bookmark=graphene.String()
 
+class CreateBookmark(graphene.Mutation):
+    # define output of mutation here
+    ok = graphene.Boolean()
+    userid = graphene.String()
+    dname=graphene.String()
+    bname = graphene.String()
+    bookmark=graphene.String()
+    # define data to be sent to server as part of insert
+    class Arguments:
+        
+        userid = graphene.String()
+        dname=graphene.String()
+        bname = graphene.String()
+        bookmark=graphene.String()
+    # code to modify database
+    def mutate(self, info, userid, dname, bname, bookmark):
+        db = mysql.connect(
+            host="localhost",
+            database="mydb",
+            user="root",
+            passwd="password",
+            auth_plugin='mysql_native_password'
+        )
+        print(userid,bname)
+        sql = "insert into userbookmark values ('"+userid+"','"+dname+"','"+bname+"','"+bookmark+"')"
+        print(sql)
+        cursor = db.cursor()
+        try:
+            cursor.execute(sql)
+            db.commit()
+            cursor.close()
+            db.close()
+            return CreateBookmark(ok=True,userid=userid,bname=bname)
+        except Exception as e:
+            db.rollback()
+            cursor.close()
+            db.close()
+            return CreateBookmark(ok=False,userid="",bname="")
+
 class Queries(graphene.ObjectType):
     domains=graphene.List(Domain)
     properties=graphene.List(Property,domain=graphene.String())
@@ -173,9 +212,44 @@ class Queries(graphene.ObjectType):
         db.close()
         return properties
 
+class Deletebookmark(graphene.Mutation):
+    # define output of mutation here
+    ok = graphene.Boolean()
+    userid = graphene.String()
+    bookmarkname = graphene.String()
+    # define data to be sent to server as part of insert
+    class Arguments:
+        userid = graphene.String()
+        bookmarkname = graphene.String()
+    # code to modify database
+    def mutate(self, info, bookmarkname, userid):
+        db = mysql.connect(
+            host="localhost",
+            database="mydb",
+            user="root",
+            passwd="password",
+            auth_plugin='mysql_native_password'
+        )
+        sql1 = "delete from userbookmark"+" where "+ \
+               "bname = '"+bookmarkname+"' and userid = '"+userid+"'"
+        cursor = db.cursor()
+        try:
+            cursor.execute(sql1)
+            db.commit()
+            cursor.close()
+            db.close()
+            #print(sql)
+            return Deletebookmark(ok=True,bookmarkname=bookmarkname,userid=userid)
+        except Exception as e:
+            #print(sql)
+            #print(e)
+            db.rollback()
+            cursor.close()
+            db.close()
+            return Deletebookmark(ok=False,bookmarkname="",userid="")
+class Mutations(graphene.ObjectType):
+    create_bookmark = CreateBookmark.Field()
+    delete_bookmark=Deletebookmark.Field()
 
-        
 
-    
-
-schema = graphene.Schema(query=Queries)
+schema = graphene.Schema(query=Queries,mutation=Mutations)        
