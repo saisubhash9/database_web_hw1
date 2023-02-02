@@ -3,6 +3,8 @@
     <head>
         <title></title>
         <link ref="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}" >
+        
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="jquery-3.4.1.min.js"></script>
         <script src="query.js"></script>
     </head>
@@ -106,14 +108,15 @@ h2{margin-top: 10px;
         <div id="page">
           <div id="bookmarksbar"></div>
             <div id="main-col">
-            <table>
+            <table id=""hiddentable>
             <tr><td>
                     <div id="domain_select"> </div>   
                     
             </td></tr>
-            <h3>Domain Select:</h3>
+            
             <tr><td>
               <form id = "myForm" action = "#"  > 
+                <h1>SEARCH CRITERIA:</h1>
                 <div id="property_details">
                 
                 </div>
@@ -129,10 +132,11 @@ h2{margin-top: 10px;
                     <input class ="button" type="reset" value="Reset" onclick="fun()">
                     
                 </td></tr>
-                <tr><td>bookmark name:<input type="text">
+                <tr><td>bookmark name:<input id="bookmm" type="text">
                   <input id="bookmarkbtn" type="button" value="add bookmark" onclick="addbookmark()"></td></tr>
         
         <tr><td><div id = "result"></div></td></tr>
+        </table>
     </body>
     <script>
       function fun(){  
